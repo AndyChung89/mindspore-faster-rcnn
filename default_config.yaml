@@ -1,0 +1,208 @@
+# Builtin Configurations(DO NOT CHANGE THESE CONFIGURATIONS unless you know exactly what you are doing)
+enable_modelarts: False
+data_url: ""
+train_url: ""
+checkpoint_url: ""
+data_path: "/cache/data"
+output_path: "/cache/train"
+load_path: "/cache/checkpoint_path"
+device_target: GPU
+enable_profiling: False
+
+# ==============================================================================
+# config
+img_width: 1280
+img_height: 768
+keep_ratio: True
+flip_ratio: 0.5
+expand_ratio: 1.0
+
+# anchor
+feature_shapes:
+- [192, 320]
+- [96, 160]
+- [48, 80]
+- [24, 40]
+- [12, 20]
+anchor_scales: [8]
+anchor_ratios: [0.5, 1.0, 2.0]
+anchor_strides: [4, 8, 16, 32, 64]
+num_anchors: 3
+
+# resnet
+resnet_block: [3, 4, 6, 3]
+resnet_in_channels: [64, 256, 512, 1024]
+resnet_out_channels: [256, 512, 1024, 2048]
+
+# fpn
+fpn_in_channels: [256, 512, 1024, 2048]
+fpn_out_channels: 256
+fpn_num_outs: 5
+
+# rpn
+rpn_in_channels: 256
+rpn_feat_channels: 256
+rpn_loss_cls_weight: 1.0
+rpn_loss_reg_weight: 1.0
+rpn_cls_out_channels: 1
+rpn_target_means: [0., 0., 0., 0.]
+rpn_target_stds: [1.0, 1.0, 1.0, 1.0]
+
+# bbox_assign_sampler
+neg_iou_thr: 0.3
+pos_iou_thr: 0.7
+min_pos_iou: 0.3
+num_bboxes: 245520
+num_gts: 128
+num_expected_neg: 256
+num_expected_pos: 128
+
+# proposal
+activate_num_classes: 2
+use_sigmoid_cls: True
+
+# roi_align
+roi_layer: {type: 'RoIAlign', out_size: 7, sample_num: 2}
+roi_align_out_channels: 256
+roi_align_featmap_strides: [4, 8, 16, 32]
+roi_align_finest_scale: 56
+roi_sample_num: 640
+
+# bbox_assign_sampler_stage2
+neg_iou_thr_stage2: 0.5
+pos_iou_thr_stage2: 0.5
+min_pos_iou_stage2: 0.5
+num_bboxes_stage2: 2000
+num_expected_pos_stage2: 128
+num_expected_neg_stage2: 512
+num_expected_total_stage2: 512
+
+# rcnn
+rcnn_num_layers: 2
+rcnn_in_channels: 256
+rcnn_fc_out_channels: 1024
+rcnn_loss_cls_weight: 1
+rcnn_loss_reg_weight: 1
+rcnn_target_means: [0., 0., 0., 0.]
+rcnn_target_stds: [0.1, 0.1, 0.2, 0.2]
+
+# train proposal
+rpn_proposal_nms_across_levels: False
+rpn_proposal_nms_pre: 2000
+rpn_proposal_nms_post: 2000
+rpn_proposal_max_num: 2000
+rpn_proposal_nms_thr: 0.7
+rpn_proposal_min_bbox_size: 0
+
+# test proposal
+rpn_nms_across_levels: False
+rpn_nms_pre: 1000 #1000
+rpn_nms_post: 1000 #1000
+rpn_max_num: 1000 #1000
+rpn_nms_thr: 0.7 # 0.7
+rpn_min_bbox_min_size: 0
+test_score_thr: 0.05 # 0.05 0.5
+test_iou_thr: 0.5
+test_max_per_img: 100
+test_batch_size: 1
+
+rpn_head_use_sigmoid: True
+rpn_head_weight: 1.0
+
+# LR
+base_lr: 0.04 # 0.04
+warmup_step: 500
+warmup_ratio: 0.0625
+sgd_step: [8, 11]
+sgd_momentum: 0.9
+
+# train
+batch_size: 2
+loss_scale: 256
+momentum: 0.91
+weight_decay: 0.00001 # 0.00001
+epoch_size: 100
+save_checkpoint: True
+save_checkpoint_epochs: 1
+keep_checkpoint_max: 10
+save_checkpoint_path: "./biandian_model_fasterrcnn"
+
+# Number of threads used to process the dataset in parallel
+num_parallel_workers: 8
+# Parallelize Python operations with multiple worker processes
+python_multiprocessing: True
+mindrecord_dir: "./train_data"
+coco_root: ""
+train_data_type: ""
+val_data_type: ""
+instance_set: ""
+coco_classes: ['background', 'bj_bpmh', 'bj_bpps', 'bj_wkps', 'jyz_pl', 'sly_dmyw',
+               'hxq_gjtps', 'xmbhyc', 'yw_gkxfw', 'yw_nc', 'gbps', 'wcaqm', 'wcgz',
+               'xy', 'bjdsyc', 'ywzt_yfyc', 'hxq_gjbs', 'kgg_ybh']
+num_classes: 18
+
+# train.py FasterRcnn training
+run_distribute: False
+dataset: "other"
+# fasterrcnn_ascend_v120_coco2017_official_cv_bs2_acc59.ckpt
+# resnet50_ascend_v120_cifar10_official_cv_bs32_acc94.ckpt
+pre_trained: "./model/fasterrcnn_ascend_v120_coco2017_official_cv_bs2_acc59.ckpt" # ./model/ckpt_0/faster_rcnn-5_3506.ckpt
+device_id: 0
+device_num: 1
+rank_id: 0
+image_dir: './label_image/data/biandian'
+anno_path: 'all_data_train.txt'
+backbone: 'resnet_v1_50'
+
+# eval.py FasterRcnn evaluation
+ann_file: 'all_data_test.txt'
+checkpoint_path: "./biandian_model_fasterrcnn/ckpt_0/faster_rcnn-100_1079.ckpt"
+# /cache/train/fasterrcnn/faster_rcnn-12_7393.ckpt
+# ./biandian_model_resnet50_2/ckpt_0/faster_rcnn-2_4300.ckpt
+
+# export.py fasterrcnn_export
+file_name: "faster_rcnn"
+file_format: "AIR"
+ckpt_file: "./model/resnet_v1_50.ckpt"
+# /cache/train/fasterrcnn/faster_rcnn-12_7393.ckpt ./model/resnet_v1_50.ckpt
+
+# postprocess ("./src/config_50.yaml")
+#ann_file: ''
+result_path: ''
+
+---
+# Config description for each option
+enable_modelarts: 'Whether training on modelarts, default: False'
+data_url: 'Dataset url for obs'
+train_url: 'Training output url for obs'
+data_path: 'Dataset path for local'
+output_path: 'Training output path for local'
+result_dir: "result files path."
+label_dir: "image file path."
+
+device_target: "device where the code will be implemented, default is Ascend"
+file_name: "output file name."
+dataset: "Dataset, either cifar10 or imagenet2012"
+parameter_server: 'Run parameter server train'
+width: 'input width'
+height: 'input height'
+enable_profiling: 'Whether enable profiling while training, default: False'
+only_create_dataset: 'If set it true, only create Mindrecord, default is false.'
+run_distribute: 'Run distribute, default is false.'
+do_train: 'Do train or not, default is true.'
+do_eval: 'Do eval or not, default is false.'
+pre_trained: 'Pretrained checkpoint path'
+device_id: 'Device id, default is 0.'
+device_num: 'Use device nums, default is 1.'
+rank_id: 'Rank id, default is 0.'
+file_format: 'file format'
+ann_file: "Ann file, default is val.json."
+checkpoint_path: "Checkpoint file path."
+ckpt_file: 'fasterrcnn ckpt file.'
+result_path: "result file path."
+backbone: "backbone network name, options:resnet_v1_50, resnet_v1.5_50, resnet_v1_101, resnet_v1_152"
+
+---
+device_target: ['Ascend', 'GPU', 'CPU']
+file_format: ["AIR", "ONNX", "MINDIR"]
+dataset_name: ["cifar10", "imagenet2012"]
