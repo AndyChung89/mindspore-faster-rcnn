@@ -155,7 +155,7 @@ anno_path: 'all_data_train.txt'
 backbone: 'resnet_v1.5_50'
 
 # eval.py FasterRcnn evaluation
-ann_file: 'val.json'
+ann_file: 'all_data_test.txt' # val.json
 checkpoint_path: "./biandian_model_fasterrcnn/ckpt_0/faster_rcnn-100_1003.ckpt"
 # /cache/train/fasterrcnn/faster_rcnn-12_7393.ckpt
 # ./biandian_model_resnet50_2/ckpt_0/faster_rcnn-2_4300.ckpt
